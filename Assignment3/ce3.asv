@@ -1,0 +1,36 @@
+clear
+load compEx3data.mat
+load compEx1data.mat
+
+x1_normalized = K\x{1};
+x2_normalized = K\x{2};
+
+[m, kx] = size(x1_normalized);
+
+% Construct the M matrix
+M = [];
+for col=1:kx
+    xx = x2_normalized(:,col)*x1_normalized(:,col)';
+    M(col,:) = xx(:)';
+end
+
+[U, S, V] = svd(M);
+v = V(:,end);
+
+eigen_matrix = S' * S;
+min_eigen_value = min( eigen_matrix(eigen_matrix>0) ); % Minimum singular value 4e-5
+
+v = V(:,end);
+norm_M_v = norm(M * v); % 0.0066
+
+% Construct E
+E = reshape(v, [3 3]);
+detE = det(E)
+[U, S, V] = svd(E);
+if det(U*V')>0
+    E = U * diag ([1 1 0]) * V';
+else
+    V = -V;
+    E = U * diag ([1 1 0]) * V';
+end
+save('EssenMatrix.mat','U','V');
