@@ -34,6 +34,8 @@ else
     V = -V;
     E = U * diag ([1 1 0]) * V';
 end
+disp('E');
+matlab2latex(E./E(3,3));
 save('essential-matrix.mat','U','V');
 
 figure

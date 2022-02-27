@@ -64,8 +64,7 @@ F = N2' * F_normalized * N1;
 % Compute epipolar lines
 epipolar_lines = F*x{1};
 epipolar_lines = epipolar_lines./sqrt(repmat(epipolar_lines(1 ,:).^2 + epipolar_lines(2 ,:).^2 ,[3 1]));
-%%
-close all;
+
 lines_to_plot = randperm(20);
 im = imread('kronan2.JPG');
 figure
@@ -74,11 +73,12 @@ hold on
 rital(epipolar_lines(:,lines_to_plot(1:20)),'b-')
 plot(x{2}(1,lines_to_plot(1:20)), x{2}(2,lines_to_plot(1:20)),'r*')
 hold off
-%%
+
+figure
 distances = (abs(sum(epipolar_lines.*x{2})));
 hist(distances, 100);
 distance_mean = mean(distances)
-F_1 = F./F(3,3)
+F = F./F(3,3)
 save('ce1.mat','F','N1','N2');
 
 

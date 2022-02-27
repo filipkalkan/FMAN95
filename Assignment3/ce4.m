@@ -40,12 +40,13 @@ for i=1:length(index)
     [M_i, X3D_i] = triangulate(x_normalized, P1, P2_i);
     X3D_i = pflat(X3D_i);
 
-    figure('Name', strcat('Camera matrix P2_', index(i)))
+    f = figure('Name', strcat('Camera matrix P2_', index(i)))
     plot3(X3D_i(1,:), X3D_i(2,:), X3D_i(3,:), '.')
     hold on
     plotcams({P1, P2_i})
+    saveas(f, strcat('Camera matrix P2_', index(i)), 'png');
 
-    figure('Name', strcat('3D P2_', index(i)))
+    f = figure('Name', strcat('3D P2_', index(i)))
     P2_i_normalized = K * P2_i;
     x_i = P2_i_normalized * X3D_i;
     x_i = pflat(x_i);
@@ -56,6 +57,7 @@ for i=1:length(index)
     hold on
     plot(x{2}(1,:),x{2}(2,:),'r*');
     hold on
+    saveas(f, strcat('3D P2_', index(i)), 'png');
 end
 
 P1_normalized = K * P1;
