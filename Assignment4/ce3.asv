@@ -1,0 +1,26 @@
+clear
+clc
+close all
+load('ce2.mat')
+
+P = { P0, P_best };
+
+
+gammak = 10^-10;
+P_new = P;
+U_new = X;
+[error_1 , residuals]= ComputeReprojectionError(P_new, U_new, x_inliers);
+
+figure()
+plot(0,sum(residuals),'r*')
+hold on
+
+for i = 1:10
+    [r, J] = LinearizeReprojErr(P_new, U_new, x_inliers);
+    delta_v = -gammak * J' * r;
+    [P_new, U_new] = update_solution(delta_v, P_new, U_new);
+    [err , residuals] = ComputeReprojectionError(P_new, U_new, x);
+    plot(i,sum(residuals),'r*');
+end
+
+RMS = sqrt(err/size(residuals,2))

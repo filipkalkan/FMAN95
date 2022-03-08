@@ -48,16 +48,16 @@ end
 
 sum(inliers_best(:)); %1472, as many as there are sift features
 
-P_0 = K * [eye(3,3) zeros(3,1)];
+P_0 = [eye(3,3) zeros(3,1)];
 P = camerasFromE(E_best);
 [P_best, X] = infrontOfCamera(P, x, x1_normalized, x2_normalized);
 P_best = K * P_best;
 X = pflat(X);
 X = X(:, inliers_best == 1);
 
-x_inliers ={x1(:,inliers_best==1), x2(:,inliers_best==1)};
+x_inliers ={x{1}(:,inliers_best==1),x{2}(:,inliers_best==1)};
 
-[error, residuals] = ComputeReprojectionError({ P_0, P_best }, X, x_inliers);
+[error, residuals] = ComputeReprojectionError({ P_0, P_best }, X, {x1, x2});
 RMS = sqrt(error / size(residuals, 2))
 
 figure
@@ -69,7 +69,7 @@ axis equal
 hold on
 plotcams({ P_best, P_0 });
 
-save("ce2",'P_0','P_best','X','x_inliers','K');
+save("A4",'P_0','P_best','X','x','K');
 
 
 
