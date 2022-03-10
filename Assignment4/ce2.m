@@ -46,7 +46,7 @@ for i = 1:100
     end
 end
 
-sum(inliers_best(:)); %1472, as many as there are sift features
+sum(inliers_best(:)) %1472, as many as there are sift features
 
 P_0 = K * [eye(3,3) zeros(3,1)];
 P = camerasFromE(E_best);
