@@ -6,24 +6,14 @@ x1_mean = mean(x{1}(1:2,:),2);
 x1_std = std(x{1}(1:2,:),0,2);
 x2_mean = mean(x{2}(1:2,:),2);
 x2_std = std(x{2}(1:2,:),0,2);
-s1 = 1/x1_std(1);
-s2 = 1/x2_std(1);
 
 % Normalize image points
-N1 = [
-    s1 0 -s1*x1_mean(1);
-    0 s1 -s1*x1_mean(2);
-    0 0 1;
-];
-N2 = [
-    s2 0 -s2*x2_mean(1);
-    0 s2 -s2*x2_mean(2);
-    0 0 1;
-];
+N1 = NMatrix(x1_mean, x1_std);
+N2 = NMatrix(x2_mean, x2_std);
 % N1 = eye(3,3);
 % N2 = eye(3,3);
 x1_normalized = N1*x{1};
-x2_normalized = N1*x{2};
+x2_normalized = N2*x{2};
 
 % Construct M for eight point algorithm
 [number_of_coordinates, number_of_points] = size(x{1});
@@ -60,9 +50,10 @@ plot(diag(x2_normalized' * F_normalized * x1_normalized)); % All values pretty c
 
 % Denormalize F
 F = N2' * F_normalized * N1;
+F = F ./ F(3,3);
 
 % Compute epipolar lines
-epipolar_lines = F*x{1};
+epipolar_lines = pflat(F*x{1});
 epipolar_lines = epipolar_lines./sqrt(repmat(epipolar_lines(1 ,:).^2 + epipolar_lines(2 ,:).^2 ,[3 1]));
 
 lines_to_plot = randperm(20);
@@ -81,6 +72,12 @@ distance_mean = mean(distances)
 F = F./F(3,3)
 save('ce1.mat','F','N1','N2');
 
+function N = NMatrix(mean_xy, std_xy)
+    s = 1./std_xy;
+    N = [s(1)   0       -s(1)*mean_xy(1);
+         0      s(2)    -s(2)*mean_xy(2);
+         0      0       1];
+end 
 
 
 

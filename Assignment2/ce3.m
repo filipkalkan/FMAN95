@@ -53,7 +53,7 @@ for i=1:size(x,2)
     norm_M_v = norm(M * v) % 0.8517 pretty close to zero
     
     P = reshape (v(1:12), [4 3])';
-    P_denormalized = inv(N)*(-P) % (-P) So we use the positive solution (where camera faces towards the scene points, giving positive depths)
+    P_denormalized = inv(N)*(P) % (-P) So we use the positive solution (where camera faces towards the scene points, giving positive depths)
     cameras{i} = P_denormalized;
 
     X = [Xmodel;ones(1,size(Xmodel,2))];
@@ -88,7 +88,10 @@ plot3(camera_center_2(1,:),camera_center_2(2,:),camera_center_2(3,:),'b*')
 
 [K1 Q1] = rq(cameras{1})
 [K2 Q2] = rq(cameras{2})
-matlab2latex(K1);
+
+save('ce3_vars','cameras','K1','K2');
+
+matlab2latex(K1./K1(3,3));
 matlab2latex(Q1);
-matlab2latex(K2);
+matlab2latex(K2./K2(3,3));
 matlab2latex(Q2);
